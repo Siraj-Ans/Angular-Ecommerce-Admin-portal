@@ -1,0 +1,46 @@
+<div class="flex font-medium text-gray-600 w-full gap-8 pr-6">
+  <div class="flex flex-col gap-6">
+    <div class="pl-3">
+      <div class="flex w-1/4 items-center">
+        <lucide-icon class="-mt-2 mr-1" name="store"></lucide-icon>
+        <h1 class="font-medium mt-3 text-2xl mb-8 text-gray-600">
+          EcommerceAdmin
+        </h1>
+      </div>
+      
+    </div>
+    <div routerLink="dashboard" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon  name="home"></lucide-icon>
+      <p class="-mt-1">Dashboard</p>
+    </div>
+    <div routerLink="products" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="shopping-cart"></lucide-icon>
+      <p class="-mt-1">Products</p>
+    </div>
+    <div routerLink="categories" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="list"></lucide-icon>
+      <p class="-mt-1">Categories</p>
+    </div>
+    <div routerLink="orders" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="layers"></lucide-icon>
+      <p class="-mt-1">Orders</p>
+    </div>
+    <div routerLink="admins" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="users"></lucide-icon>
+      <p class="-mt-1">Admins</p>
+    </div>
+    <div routerLink="settings" routerLinkActive="active-link" class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="settings"></lucide-icon>
+      <p class="-mt-1">Settings</p>
+    </div>
+    <div class="flex rounded-md px-3 py-2 gap-2 text-xl cursor-pointer">
+      <lucide-icon name="log-out"></lucide-icon>
+      <button class="-mt-1">Logout</button>
+    </div>
+  </div>
+  <div class="w-full">
+    <router-outlet></router-outlet>
+
+  </div>
+    
+</div>
