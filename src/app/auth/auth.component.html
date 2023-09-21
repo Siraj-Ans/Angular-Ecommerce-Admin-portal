@@ -1,21 +1,29 @@
-<div class="flex items-center  justify-center w-full h-full">
-    <div class="flex flex-col items-center gap-16 w-1/3 text-center h-3/5 py-6 px-6 shadow-lg bg-white">
-        <h1 class="text-3xl font-bold text-gray-600">Login</h1>
-
-    </div>
-        
-    <div  id="g_id_onload"
+<div class="flex items-center justify-center w-full h-full">
+  <div
+    class="flex flex-col items-center gap-16 w-1/3 text-center h-3/5 py-6 shadow-lg bg-white"
+  >
+    <h1 class="text-3xl font-bold text-gray-600">Login</h1>
+    <div class="flex w-full justify-center items-center">
+      <div
+        class=""
+        id="g_id_onload"
         data-client_id="371408936031-nqmnudk1nmaut008iup7e0f9out948ok.apps.googleusercontent.com"
-        data-login_uri="http://localhost:4200"
-        data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin"
+        data-login_uri=""
+        data-auto_prompt="true"
+      ></div>
+
+      <div
+        class=""
+        class="g_id_signin"
         data-type="standard"
-        data-size="large"
+        data-size="medium"
         data-theme="outline"
         data-text="sign_in_with"
         data-shape="rectangular"
-        data-logo_alignment="left">
+        data-logo_alignment="left"
+      ></div>
     </div>
-    
+
+    <p *ngIf="authError" class="text-red-600 font-medium">{{ authError }}</p>
+  </div>
 </div>

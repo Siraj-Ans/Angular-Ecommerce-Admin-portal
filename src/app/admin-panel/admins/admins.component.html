@@ -1,21 +1,51 @@
 <div class="flex pt-16 flex-col gap-8">
-    <h1 class="text-3xl mb-5 font-medium text-gray-600">Admins</h1>
+  <h1 class="text-3xl mb-5 font-medium text-gray-600">Admins</h1>
 
-    <form (ngSubmit)="onCreateAdmin(adminForm)" #adminForm="ngForm" class="flex gap-1 flex-col">
-        <label class="font-medium text-gray-600" for="">Add new admin</label>
-        <div class="flex gap-4">
-            <input ngModel name="adminEmail" #adminEmailInput="ngModel" email required placeholder="google email" class="px-3 w-9/12 font-medium py-2 border-2 border-gray-300" type="text">
-            <button type="submit" class="px-3 py-2 text-white w-32 bg-green-500 font-medium rounded-md">Add admin</button>
-        </div>
-        <p *ngIf="adminEmailInput.invalid" class="text-red-600 font-medium">Invalid email address!</p>
-    </form>
-
-    <div class="flex flex-col gap-1">
-        <p class="text-gray-600 font-medium">Existing admins</p>
-        <div class="w-9/12 shadow-xl bg-white">
-            <h1 class="font-medium text-gray-800 px-3 py-2">ADMIN GOOGLE EMAIL</h1>
-
-        </div>
+  <form
+    (ngSubmit)="onCreateAdmin(adminForm)"
+    #adminForm="ngForm"
+    class="flex gap-1 flex-col"
+  >
+    <label class="font-medium text-gray-600" for="">Add new admin</label>
+    <div class="flex gap-4">
+      <input
+        ngModel
+        name="adminEmail"
+        #adminEmailInput="ngModel"
+        email
+        required
+        placeholder="google email"
+        class="px-3 w-9/12 font-medium py-2 border-2 border-gray-300"
+        type="text"
+      />
+      <button
+        type="submit"
+        class="px-3 py-2 text-white w-32 bg-green-500 font-medium rounded-md"
+      >
+        Add admin
+      </button>
     </div>
+    <p
+      *ngIf="adminEmailInput.invalid && adminEmailInput.touched"
+      class="text-red-600 font-medium"
+    >
+      Invalid email address!
+    </p>
+    <p
+      *ngIf="reponseMessage"
+      [ngStyle]="{
+        color: reponseMessage.status === 'success' ? 'green' : 'red'
+      }"
+      class="font-medium mt-2"
+    >
+      {{ reponseMessage.message }}
+    </p>
+  </form>
 
+  <div class="flex flex-col gap-1">
+    <p class="text-gray-600 font-medium">Existing admins</p>
+    <div class="w-9/12 shadow-xl bg-white">
+      <h1 class="font-medium text-gray-800 px-3 py-2">ADMIN GOOGLE EMAIL</h1>
+    </div>
+  </div>
 </div>
