@@ -6,9 +6,12 @@
     #adminForm="ngForm"
     class="flex gap-1 flex-col"
   >
-    <label class="font-medium text-gray-600" for="">Add new admin</label>
+    <label class="font-medium text-gray-600" for="adminEmail"
+      >Add new admin</label
+    >
     <div class="flex gap-4">
       <input
+        id="adminEmail"
         ngModel
         name="adminEmail"
         #adminEmailInput="ngModel"
@@ -45,7 +48,26 @@
   <div class="flex flex-col gap-1">
     <p class="text-gray-600 font-medium">Existing admins</p>
     <div class="w-9/12 shadow-xl bg-white">
-      <h1 class="font-medium text-gray-800 px-3 py-2">ADMIN GOOGLE EMAIL</h1>
+      <h1
+        class="font-semibold border-b-2 mb-2 border-gray-600 text-gray-800 px-3 py-2"
+      >
+        ADMIN GOOGLE EMAIL
+      </h1>
+      <div class="flex flex-col py-2 gap-4">
+        <div
+          *ngFor="let admin of admins"
+          class="flex items-center px-2 justify-between"
+        >
+          <p>{{ admin.email }}</p>
+          <p>{{ admin.dateAndTime }}</p>
+          <button
+            (click)="onDeleteAdmin(admin.email)"
+            class="bg-red-600 text-white font-medium px-2 py-1 w-20 rounded-md"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -29,9 +29,11 @@ export class AuthComponent implements OnInit {
           })
           .subscribe({
             next: (responseData) => {
-              console.log('responseDate: ', responseData);
-              if (responseData.email) this.router.navigate(['']);
-              else this.router.navigate(['/auth']);
+              if (responseData.email) {
+                localStorage.setItem('token', user.idToken);
+
+                this.router.navigate(['']);
+              } else this.router.navigate(['/auth']);
             },
             error: (err) => {
               this.authError = err.error.message;

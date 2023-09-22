@@ -25,6 +25,7 @@ exports.login = (req, res) => {
 exports.createAdmin = (req, res) => {
   const admin = new User({
     email: req.body.email,
+    dateAndTime: req.body.dateAndTime,
   });
 
   User.findOne({ email: admin.email }).then((user) => {
