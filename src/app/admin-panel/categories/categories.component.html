@@ -1,25 +1,168 @@
-<div class="flex pt-14 flex-col gap-4">
-    <h1 class="text-3xl mb-5 font-medium text-gray-600">Categories</h1>
+<div
+  class="flex flex-col gap-4 pt-5 font-bold px-5 text-dark-purple pb-8 h-full overflow-scroll overflow-x-hidden overflow-y-auto"
+>
+  <h1 class="text-3xl mb-5 font-semibold">Categories</h1>
 
-    <form>
-        <div class="flex flex-col gap-5">
-            <div class="flex flex-col gap-1">
-                <label class="font-medium text-gray-600" for="">Create new category</label>
-                <div  class="flex gap-3">
-                    <input placeholder="Category name" class="px-3 font-medium py-2 border-2 border-gray-300" type="text">
-                    <input class="px-3 py-2 border-2 border-gray-300" type="text">
-    
-                </div>
-            </div>
-            
-            <div class="flex gap-1 flex-col">
-                <label class="font-medium text-gray-600" for="">Properties</label>
-                <button class="px-3 py-2 border-2 border-gray-300 w-44 bg-white font-medium rounded-md">Add new property</button>
-            </div>
-
-            <button class="bg-green text-white font-medium rounded-md px-3 py-2 bg-green-500 w-24">Save</button>
-
+  <form
+    [formGroup]="categoryForm"
+    class="text-light-purple"
+    (ngSubmit)="onSubmitCategory()"
+  >
+    <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-1">
+        <label class="font-medium" for="categoryName"
+          >Create new category</label
+        >
+        <div class="flex gap-3">
+          <div>
+            <input
+              id="categoryName"
+              formControlName="categoryName"
+              placeholder="Category name"
+              class="px-2 rounded-sm font-medium py-1 border-2 border-gray-300"
+              type="text"
+            />
+          </div>
+          <div>
+            <select
+              [(ngModel)]="categories[0]"
+              formControlName="parent"
+              class="max-w-fit text-light-purple font-medium px-2 py-1 border-2 border-gray-300 rounded-sm"
+              required
+            >
+              <option
+                class=""
+                [ngValue]="category"
+                *ngFor="let category of categories; let i = index"
+                [selected]="i == 0"
+              >
+                {{ category.categoryName }}
+              </option>
+            </select>
+          </div>
         </div>
-    </form>
+      </div>
 
+      <div class="flex gap-1 flex-col">
+        <label class="font-medium" for="">Properties</label>
+        <button
+          type="button"
+          (click)="onAddProperty()"
+          class="px-3 py-2 text-white border-gray-300 w-44 bg-light-purple hover:bg-dark-purple font-medium rounded-md"
+        >
+          Add new property
+        </button>
+
+        <div>
+          <div>
+            <div formArrayName="properties">
+              <div
+                *ngFor="
+                  let propertyControl of propertyControls.controls;
+                  let i = index
+                "
+                [formGroupName]="i"
+              >
+                <div class="flex gap-2 my-2">
+                  <input
+                    required
+                    class="mb-4"
+                    formControlName="property"
+                    class="px-2 font-medium py-1 border-2 border-gray-300"
+                    type="text"
+                  />
+                  <input
+                    required
+                    formControlName="value"
+                    class="px-3 font-medium py-1 border-2 border-gray-300"
+                    type="text"
+                  />
+                  <!-- [disabled]="
+                      categoryForm.get('properties').invalid &&
+                      categoryForm.get('properties').touched &&
+                      !categoryForm.get('properties').pristine
+                    " -->
+                  <button
+                    (click)="onDeletePropertyControl(i)"
+                    type="button"
+                    class="bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md px-3 py-1 w-fit"
+                  >
+                    delete
+                  </button>
+                </div>
+                <!-- <p
+                  *ngIf="
+                    categoryForm.get('properties').invalid &&
+                    categoryForm.get('properties').touched
+                  "
+                  class="text-red-600 font-medium"
+                >
+                  Properties must not be empty!
+                </p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        *ngIf="mode.state === 'edit'"
+        (click)="onCancelEdit()"
+        type="submit"
+        class="text-white font-medium rounded-md px-3 py-2 bg-red-600 w-24"
+      >
+        cancel
+      </button>
+      <button
+        [disabled]="categoryForm.disabled"
+        type="submit"
+        class="text-white w-24 font-medium rounded-md px-3 py-2 bg-gradient-to-r bg-green-500 hover:from-green-500 hover:to-green-900 transition-all duration-500"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+
+  <div class="shadow-lg" *ngIf="mode.state === 'no-edit'">
+    <div class="flex flex-col">
+      <div class="flex">
+        <div class="px-2 w-1/2 py-2 bg-blue-300">
+          <p class="text-lg font-semibold">CATEGORY NAME</p>
+        </div>
+        <div class="px-2 w-full py-2 pl-4 bg-blue-300">
+          <p class="text-lg font-semibold">PARENT CATEGORY</p>
+        </div>
+      </div>
+
+      <div class="" *ngFor="let category of categories; let i = index">
+        <div
+          *ngIf="i !== 0"
+          class="flex px-3 border-b-2 py-2 items-center justify-between"
+        >
+          <p class="font-medium">{{ category.categoryName }}</p>
+          <p class="font-medium">
+            {{
+              category?.parent
+                ? category.parent.categoryName
+                : "No parent Category"
+            }}
+          </p>
+
+          <div class="flex gap-3">
+            <button
+              (click)="onEditCategory(i)"
+              class="px-2 py-1 border-2 w-20 font-medium rounded-md"
+            >
+              Edit
+            </button>
+            <button
+              (click)="onDeleteCategory(i)"
+              class="px-2 py-1w-20 bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

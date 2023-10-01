@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   SocialLoginModule,
   SocialAuthServiceConfig,
 } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-
 import {
   LucideAngularModule,
   Home,
@@ -19,7 +19,6 @@ import {
   LogOut,
   ArrowUpFromLine,
 } from 'lucide-angular';
-import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -32,6 +31,7 @@ import { OrdersComponent } from './admin-panel/orders/orders.component';
 import { AdminsComponent } from './admin-panel/admins/admins.component';
 import { SettingsComponent } from './admin-panel/settings/settings.component';
 import { AuthComponent } from './auth/auth.component';
+import { EditProductComponent } from './admin-panel/products/edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +39,7 @@ import { AuthComponent } from './auth/auth.component';
     AdminPanelComponent,
     DashboardComponent,
     ProductsComponent,
+    EditProductComponent,
     CategoriesComponent,
     OrdersComponent,
     AdminsComponent,
@@ -47,8 +48,9 @@ import { AuthComponent } from './auth/auth.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     SocialLoginModule,
     AppRoutingModule,
     LucideAngularModule.pick({

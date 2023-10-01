@@ -9,6 +9,7 @@ import { AdminsComponent } from './admin-panel/admins/admins.component';
 import { SettingsComponent } from './admin-panel/settings/settings.component';
 import { AuthComponent } from './auth/auth.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { EditProductComponent } from './admin-panel/products/edit-product/edit-product.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/adminpanel/dashboard', pathMatch: 'full' },
@@ -17,7 +18,14 @@ const appRoutes: Routes = [
     component: AdminPanelComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'products', component: ProductsComponent },
+      {
+        path: 'products',
+        component: ProductsComponent,
+        children: [
+          { path: 'create-product', component: EditProductComponent },
+          { path: 'edit-product/:id', component: EditProductComponent },
+        ],
+      },
       { path: 'categories', component: CategoriesComponent },
       { path: 'orders', component: OrdersComponent },
       { path: 'admins', component: AdminsComponent },
