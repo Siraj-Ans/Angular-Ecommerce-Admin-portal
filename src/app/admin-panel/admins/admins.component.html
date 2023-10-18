@@ -1,14 +1,12 @@
-<div class="flex pt-16 flex-col gap-8">
-  <h1 class="text-3xl mb-5 font-medium text-gray-600">Admins</h1>
+<div class="flex pt-7 px-5 flex-col gap-8">
+  <h1 class="text-3xl mb-5 font-bold text-dark text-dark-purple">Admins</h1>
 
   <form
     (ngSubmit)="onCreateAdmin(adminForm)"
     #adminForm="ngForm"
-    class="flex gap-1 flex-col"
+    class="flex gap-1 flex-col text-light-purple"
   >
-    <label class="font-medium text-gray-600" for="adminEmail"
-      >Add new admin</label
-    >
+    <label class="font-medium" for="adminEmail">Add new admin</label>
     <div class="flex gap-4">
       <input
         id="adminEmail"
@@ -23,7 +21,7 @@
       />
       <button
         type="submit"
-        class="px-3 py-2 text-white w-32 bg-green-500 font-medium rounded-md"
+        class="text-white w-fit font-medium rounded-md px-3 py-2 bg-gradient-to-r bg-green-500 hover:from-green-500 hover:to-green-900 transition-all duration-500"
       >
         Add admin
       </button>
@@ -46,10 +44,10 @@
   </form>
 
   <div class="flex flex-col gap-1">
-    <p class="text-gray-600 font-medium">Existing admins</p>
+    <p class="font-medium text-light-purple">Existing admins</p>
     <div class="w-9/12 shadow-xl bg-white">
       <h1
-        class="font-semibold border-b-2 mb-2 border-gray-600 text-gray-800 px-3 py-2"
+        class="font-semibold text-dark-purple border-b-2 mb-2 border-gray-600 px-3 py-2"
       >
         ADMIN GOOGLE EMAIL
       </h1>
@@ -58,11 +56,11 @@
           *ngFor="let admin of admins"
           class="flex items-center px-2 justify-between"
         >
-          <p>{{ admin.email }}</p>
-          <p>{{ admin.dateAndTime }}</p>
+          <p class="text-light-purple font-medium">{{ admin.email }}</p>
+          <p class="text-light-purple font-medium">{{ admin.dateAndTime }}</p>
           <button
             (click)="onDeleteAdmin(admin.email)"
-            class="bg-red-600 text-white font-medium px-2 py-1 w-20 rounded-md"
+            class="px-2 py-1 w-fit bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md"
           >
             Delete
           </button>

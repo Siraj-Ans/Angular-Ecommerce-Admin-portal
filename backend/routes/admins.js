@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const adminsControllers = require("../controllers/admins");
+const adminsControllers = require("../../backend/controllers/admins");
 
 router.get("/get-admins", adminsControllers.getAdmins);
 

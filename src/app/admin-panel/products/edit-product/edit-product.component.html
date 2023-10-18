@@ -2,7 +2,7 @@
   <form
     [formGroup]="productForm"
     (ngSubmit)="onSubmitProduct()"
-    class="flex flex-col overflow-scroll text-light-purple h-full gap-6 pr-28"
+    class="flex flex-col text-light-purple h-full gap-6 pr-28"
   >
     <div class="flex gap-1 flex-col">
       <label class="font-medium" for="productName">Product name</label>
@@ -40,11 +40,13 @@
           *ngFor="let imagePath of imagePaths"
           class="flex"
         >
-          <img
-            class="w-44c rounded-md object-contain h-32"
-            [src]="imagePath"
-            alt="Cannot get product image"
-          />
+          <div *ngFor="let imageFile of imageFiles">
+            <img
+              class="w-44c rounded-md object-contain h-32"
+              [src]="imageFile"
+              alt="Cannot get product image"
+            />
+          </div>
         </div>
         <label
           for="photos"
@@ -58,10 +60,11 @@
         <input
           (change)="onImagePreview($event)"
           formControlName="productImages"
-          name="productImage"
+          name="productImages"
           class="hidden"
           id="photos"
           type="file"
+          required
           multiple
         />
       </div>
@@ -97,11 +100,21 @@
         type="text"
       />
     </div>
-    <button
-      type="submit"
-      class="font-medium w-24 text-white bg-green-500 px-3 py-2 rounded-md"
-    >
-      Save
-    </button>
+    <div class="flex gap-4">
+      <button
+        (click)="onCancelEdit()"
+        type="button"
+        class="font-medium w-24 text-white bg-red-500 px-3 py-2 rounded-md"
+      >
+        Cancel
+      </button>
+      <button
+        [disabled]="productForm.invalid"
+        type="submit"
+        class="font-medium w-24 text-white bg-green-500 px-3 py-2 rounded-md"
+      >
+        Save
+      </button>
+    </div>
   </form>
 </div>

@@ -1,8 +1,7 @@
-const User = require("../models/user");
+const User = require("../../backend/models/user");
 
 exports.login = (req, res) => {
   const email = req.query.email;
-  console.log("params: ", req.query.email);
 
   User.findOne({ email: email })
     .then((user) => {

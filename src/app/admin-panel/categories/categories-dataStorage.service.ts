@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 
 import { Category } from './categories.model';
-import { ParentCategory } from './parentCategory.model';
 
 import { CategoriesService } from './categories.service';
 
@@ -18,10 +17,9 @@ export class CategoriesDataStorageService {
     private categoryService: CategoriesService
   ) {}
 
-  fetchCategory(): void {
-    this.http
+  fetchCategories(): Observable<Category[]> {
+    return this.http
       .get<{
-        message: string;
         categories: {
           _id: string;
           __v: number;
@@ -34,9 +32,9 @@ export class CategoriesDataStorageService {
           properties: { property: string; values: string[] }[];
         }[];
       }>(BACKEND_URL + '/fetch-categories')
-      .subscribe({
-        next: (responseData) => {
-          const categories = responseData.categories.map((category) => {
+      .pipe(
+        map((responseData) => {
+          return responseData.categories.map((category) => {
             return {
               id: category._id,
               categoryName: category.categoryName,
@@ -49,10 +47,11 @@ export class CategoriesDataStorageService {
               }),
             };
           });
-
+        }),
+        tap((categories: Category[]) => {
           this.categoryService.setCategories(categories);
-        },
-      });
+        })
+      );
   }
 
   createCategory(category: Category): void {
@@ -113,10 +112,10 @@ export class CategoriesDataStorageService {
     });
   }
 
-  updateCategory(index: number, category: Category) {
+  updateCategory(category: Category) {
     return this.http.put(BACKEND_URL + 'update-category/', category).subscribe({
       next: () => {
-        this.categoryService.updateCategory(index, category);
+        this.categoryService.updateCategory(category);
       },
       error: (err) => {
         console.log('[Category] Error: ', err);

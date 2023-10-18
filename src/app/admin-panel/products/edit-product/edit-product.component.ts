@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 
 import { Category } from '../../categories/categories.model';
 import { Product } from '../products.model';
 
 import { ProductDataStorageService } from '../products-dataStorage.service';
-import { CategoriesDataStorageService } from '../../categories/categories-dataStorage.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ProductsService } from '../products.service';
 
@@ -33,60 +32,67 @@ export class EditProductComponent implements OnInit, OnDestroy {
   imagePaths: string[] = [];
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private productsDataStorageService: ProductDataStorageService,
     private productSerive: ProductsService,
-    private categorydataStorageService: CategoriesDataStorageService,
-    private categoryService: CategoriesService,
-    private activatedRoute: ActivatedRoute
+    private categoryService: CategoriesService
   ) {}
 
   ngOnInit(): void {
-    this.categorydataStorageService.fetchCategory();
+    this.productSerive.editMode.next('edit-mode');
 
     this.productForm = new FormGroup({
       productName: new FormControl(null, Validators.required),
       productCategory: new FormControl(null, Validators.required),
-      productImages: new FormControl([], [Validators.required]),
+      productImages: new FormControl(null, [Validators.required]),
       description: new FormControl(null, Validators.required),
       priceInUSD: new FormControl(null, Validators.required),
     });
 
-    this.categoryService.categoriesChanged.subscribe((categories) => {
-      this.categories = [
-        {
-          id: null,
-          categoryName: 'Uncategorized',
-          parent: null,
-          properties: null,
-        },
-        ...categories,
-      ];
-    });
+    this.categories = [
+      {
+        id: null,
+        categoryName: 'Uncategorized',
+        parent: null,
+        properties: null,
+      },
+
+      ...this.categoryService.getCategories(),
+    ];
 
     this.selectedProductSubscription = this.productSerive.selectedProduct
       .pipe(take(1))
       .subscribe((product) => {
         this.product = product;
-        console.log(this.product);
       });
 
     this.activatedRoute.params.subscribe((params) => {
       if (params['id']) {
+        this.product = this.productSerive.getProductById(params['id']);
+
         this.productForm.get('productName').setValue(this.product.productName);
 
         this.productForm
           .get('productCategory')
           .setValue(this.product.productCategory);
-        // this.categories = [this.product.productCategory, this.categories];
+        this.categories = [this.product.productCategory, ...this.categories];
 
-        console.log(this.product.productImages);
-        this.productForm
-          .get('productImages')
-          .setValue(this.product.productImages);
+        this.imageFiles = this.product.productImages;
+        console.log(this.imageFiles);
+        // console.log(this.productForm.get('productImages'));
+        // this.productForm
+        //   .get('productImages')
+        //   .setValue(this.product.productImages);
         this.productForm.get('description').setValue(this.product.description);
         this.productForm.get('priceInUSD').setValue(this.product.priceInUSD);
       }
     });
+  }
+
+  onCancelEdit(): void {
+    this.productSerive.editMode.next('no-edit');
+    this.router.navigate(['adminpanel/products']);
   }
 
   onImagePreview(event: Event): void {
@@ -112,7 +118,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     let formData = new FormData();
 
     formData.append('id', null);
-    console.log('form: ', this.productForm.value);
 
     if (this.activatedRoute.snapshot.params['id'])
       formData.set('id', this.activatedRoute.snapshot.params['id']);
@@ -128,7 +133,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
       formData.append('productImages', file);
     });
 
-    console.log('trig');
     if (!this.activatedRoute.snapshot.params['id'])
       this.productsDataStorageService.createProduct(formData);
     else this.productsDataStorageService.updatedProduct(formData);

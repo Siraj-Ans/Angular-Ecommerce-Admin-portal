@@ -1,5 +1,5 @@
 <div
-  class="flex flex-col text-dark-purple gap-4 pt-7 px-5 pb-4 max-h-full overflow-scroll overflow-x-hidden"
+  class="flex flex-col h-full text-dark-purple gap-4 pt-7 px-5 pb-4 max-h-full"
 >
   <button
     *ngIf="mode !== 'add-mode'"
@@ -12,9 +12,9 @@
 
   <div
     *ngIf="mode === 'no-edit'"
-    class="flex flex-col rounded-sm gap-2 text-lg w-11/12 shadow-lg bg-white"
+    class="flex flex-col rounded-sm gap-2 text-lg w-11/12 shadow-lg"
   >
-    <div class="border-b-2 px-2 py-2">
+    <div class="border-b-2 bg-blue-300 px-2 py-2">
       <h1 class="font-medium">Product Name</h1>
     </div>
     <div *ngFor="let product of products; let i = index" class="">
@@ -27,12 +27,13 @@
           >
             Edit
           </button>
-          <button
-            (click)="onDeleteProduct(product.id, i)"
-            class="px-2 py-1w-20 bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md"
-          >
-            Delete
-          </button>
+          <div class="flex items-center">
+            <lucide-icon
+              class="cursor-pointer text-red-700"
+              (click)="onDeleteProduct(product.id, i)"
+              name="trash-2"
+            ></lucide-icon>
+          </div>
         </div>
       </div>
     </div>

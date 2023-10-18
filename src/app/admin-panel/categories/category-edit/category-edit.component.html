@@ -1,13 +1,8 @@
-<div
-  class="flex flex-col gap-4 pt-5 font-bold px-5 text-dark-purple pb-8 h-full overflow-scroll overflow-x-hidden overflow-y-auto"
->
-  <h1 class="text-3xl mb-5 font-semibold">Categories</h1>
-
+<div>
   <form
-    *ngIf="mode === 'no-edit'"
-    [formGroup]="categoryForm"
+    [formGroup]="editCategoryForm"
+    (ngSubmit)="onEditCategory()"
     class="text-light-purple"
-    (ngSubmit)="onSubmitCategory()"
   >
     <div class="flex flex-col gap-5">
       <div class="flex flex-col gap-1">
@@ -25,20 +20,19 @@
             />
           </div>
           <div>
+            <!-- [(ngModel)]="categories[0]" -->
             <select
-              [(ngModel)]="categories[0]"
               formControlName="parent"
               class="max-w-fit text-light-purple font-medium px-2 py-1 border-2 border-gray-300 rounded-sm"
               required
             >
-              <option
-                class=""
-                [ngValue]="category"
+              <!-- <option
                 *ngFor="let category of categories; let i = index"
+                [ngValue]="category"
                 [selected]="i == 0"
               >
                 {{ category.categoryName }}
-              </option>
+              </option> -->
             </select>
           </div>
         </div>
@@ -47,8 +41,8 @@
       <div class="flex gap-1 flex-col">
         <label class="font-medium" for="">Properties</label>
         <button
-          type="button"
           (click)="onAddProperty()"
+          type="button"
           class="px-3 py-2 text-white border-gray-300 w-44 bg-light-purple hover:bg-dark-purple font-medium rounded-md"
         >
           Add new property
@@ -112,8 +106,9 @@
       >
         cancel
       </button>
+      <!-- [disabled]="categoryForm.disabled" -->
       <button
-        [disabled]="categoryForm.disabled"
+        (click)="onSaveCategory()"
         type="submit"
         class="font-medium w-fit text-white bg-green-500 px-3 py-2 rounded-md"
       >
@@ -121,56 +116,4 @@
       </button>
     </div>
   </form>
-
-  <div class="shadow-lg" *ngIf="mode === 'no-edit'">
-    <div class="flex flex-col">
-      <div class="flex">
-        <div class="px-2 w-1/2 py-2 bg-blue-300">
-          <p class="text-lg font-semibold">CATEGORY NAME</p>
-        </div>
-        <div class="px-2 w-full py-2 pl-4 bg-blue-300">
-          <p class="text-lg font-semibold">PARENT CATEGORY</p>
-        </div>
-      </div>
-
-      <div class="" *ngFor="let category of categories; let i = index">
-        <div
-          *ngIf="i !== 0"
-          class="flex px-3 border-b-2 py-2 items-center justify-between"
-        >
-          <p class="font-medium">{{ category.categoryName }}</p>
-          <p class="font-medium">
-            {{
-              category?.parent
-                ? category.parent.categoryName
-                : "No parent Category"
-            }}
-          </p>
-
-          <div class="flex gap-3">
-            <button
-              (click)="onEditCategory(category)"
-              class="px-2 py-1 border-2 w-20 font-medium rounded-md"
-            >
-              Edit
-            </button>
-            <div
-              (click)="onDeleteCategory(i)"
-              class="flex items-center cursor-pointer text-red-900"
-            >
-              <lucide-icon name="trash-2"></lucide-icon>
-            </div>
-            <!-- <button
-              (click)="onDeleteCategory(i)"
-              class="px-2 py-1 w-20 bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md"
-            >
-              Delete
-            </button> -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <router-outlet></router-outlet>
 </div>

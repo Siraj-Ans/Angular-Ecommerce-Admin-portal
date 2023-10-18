@@ -1,4 +1,4 @@
-const Category = require("../models/category");
+const Category = require("../../backend/models/category");
 
 exports.createCategory = (req, res) => {
   let category = null;
@@ -41,7 +41,6 @@ exports.fetchCategories = (req, res) => {
     .populate("parent")
     .then((documents) => {
       res.status(200).json({
-        message: "successfully fetched the categories!",
         categories: documents,
       });
     })

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+import jwt_decode from 'jwt-decode';
 
-import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
-const BACKEND_URL = environment.apiUTL + 'auth/';
+import { DecodedCredentials } from './decoded-credentials.model';
 
 @Component({
   selector: 'app-auth',
@@ -15,34 +15,59 @@ export class AuthComponent implements OnInit {
   authError: string;
 
   constructor(
-    private socialAuthService: SocialAuthService,
     private router: Router,
-    private http: HttpClient
+    private authService: AuthService,
+    private _ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
-    this.socialAuthService.authState.subscribe({
-      next: (user) => {
-        this.http
-          .get<{ email: string }>(BACKEND_URL + 'login', {
-            params: new HttpParams().set('email', user.email),
-          })
-          .subscribe({
-            next: (responseData) => {
-              if (responseData.email) {
-                localStorage.setItem('token', user.idToken);
+    // @ts-ignore
+    window.onGoogleLibraryLoad = () => {
+      // @ts-ignore
+      google.accounts.id.initialize({
+        client_id:
+          '567341419455-h5nmlnqn4qsjlb90kfs67opejt5ibceq.apps.googleusercontent.com',
+        callback: this.handleCredentialsResponse.bind(this),
+        auto_select: true,
+        cancel_on_tap_outside: true,
+      });
 
-                this.router.navigate(['']);
-              } else this.router.navigate(['/auth']);
-            },
-            error: (err) => {
-              this.authError = err.error.message;
-            },
+      // @ts-ignore
+      google.accounts.id.renderButton(
+        // @ts-ignore
+        document.getElementById('googleButton'),
+        {
+          theme: 'outline',
+          size: 'large',
+          width: 100,
+        },
+
+        // @ts-ignore
+        google.accounts.id.prompt(
+          (notification: PromptMomentNotification) => {}
+        )
+      );
+    };
+  }
+
+  async handleCredentialsResponse(response: CredentialResponse) {
+    try {
+      const decodedToken: DecodedCredentials = jwt_decode(response.credential);
+      this.authService.login(decodedToken.email).subscribe({
+        next: (responseData) => {
+          console.log(responseData);
+          this.authService.setUser(decodedToken, response.credential);
+          this._ngZone.run(() => {
+            this.router.navigate(['']);
           });
-      },
-      error: (err) => {
-        console.log('[Google Login] err: ', err);
-      },
-    });
+          this.authService.isAuthenticated = true;
+        },
+        error: (err) => {
+          this.authError = err.error.message;
+        },
+      });
+    } catch (err) {
+      return err;
+    }
   }
 }

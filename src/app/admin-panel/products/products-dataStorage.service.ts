@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 
 import { Product } from './products.model';
 
@@ -20,12 +20,10 @@ export class ProductDataStorageService {
     private router: Router
   ) {}
 
-  fetchProducts(): void {
-    this.http
+  fetchProducts(): Observable<Product[]> {
+    return this.http
       .get<{
-        message: string;
         products: {
-          id: String;
           productName: string;
           productCategory: {
             _id: string;
@@ -42,9 +40,9 @@ export class ProductDataStorageService {
           __v: number;
         }[];
       }>(BACKEND_URL + 'fetch-products')
-      .subscribe({
-        next: (responseData) => {
-          const products: Product[] = responseData.products.map((product) => {
+      .pipe(
+        map((responseData) => {
+          return responseData.products.map((product) => {
             return {
               id: product._id,
               productName: product.productName,
@@ -58,13 +56,11 @@ export class ProductDataStorageService {
               priceInUSD: product.priceInUSD,
             };
           });
-
+        }),
+        tap((products: Product[]) => {
           this.productService.setProducts(products);
-        },
-        error: (err) => {
-          console.log('[Products] Error', err);
-        },
-      });
+        })
+      );
   }
 
   createProduct(product: FormData): void {
@@ -97,8 +93,6 @@ export class ProductDataStorageService {
             responseData.product.description,
             +responseData.product.priceInUSD
           );
-
-          console.log('product: ', product);
 
           this.productService.addProduct(product);
           this.productService.editMode.next('no-edit');
@@ -133,9 +127,14 @@ export class ProductDataStorageService {
     });
   }
 
-  deleteProduct(productID: string, index: number): void {
+  deleteProduct(productID: string, index: number, product: Product): void {
     this.http
-      .delete<{ message: string }>(BACKEND_URL + '/delete-product/' + productID)
+      .delete<{ message: string }>(
+        BACKEND_URL + '/delete-product/' + productID,
+        {
+          params: new HttpParams().set('product', JSON.stringify(product)),
+        }
+      )
       .subscribe({
         next: () => {
           this.productService.deleteProduct(index);
@@ -144,8 +143,50 @@ export class ProductDataStorageService {
   }
 
   fetchProduct(id: string): Observable<Object> {
-    return this.http.get(BACKEND_URL + 'fetch-product', {
-      params: new HttpParams().set('id', id),
-    });
+    return this.http
+      .get(BACKEND_URL + 'fetch-product', {
+        params: new HttpParams().set('id', id),
+      })
+      .pipe(
+        map(
+          (responseData: {
+            message: string;
+            product: {
+              _id: string;
+              productName: string;
+              productCategory: {
+                _id: string;
+                __v: number;
+                categoryName: string;
+                properties: { property: string; values: string[] }[];
+              };
+              storage: string;
+              color: string;
+              productImages: Object[];
+              description: string;
+              priceInUSD: number;
+            };
+          }) => {
+            return {
+              message: responseData.message,
+              product: {
+                id: responseData.product._id,
+                productName: responseData.product.productName,
+                productCategory: {
+                  _id: responseData.product.productCategory._id,
+                  categoryName:
+                    responseData.product.productCategory.categoryName,
+                  properties: responseData.product.productCategory.properties,
+                },
+                storage: responseData.product.storage,
+                color: responseData.product.color,
+                productImages: responseData.product.productImages,
+                description: responseData.product.description,
+                priceInUSD: responseData.product.priceInUSD,
+              },
+            };
+          }
+        )
+      );
   }
 }

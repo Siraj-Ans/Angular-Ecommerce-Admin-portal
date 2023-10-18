@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -11,7 +17,9 @@ import { Product } from './products.model';
   selector: 'app-product',
   templateUrl: './products.component.html',
 })
-export class ProductsComponent implements OnInit, OnDestroy {
+export class ProductsComponent
+  implements OnInit, OnDestroy, AfterContentChecked
+{
   products: Product[] = [];
   productsChangedSubscription: Subscription;
   mode = 'no-edit';
@@ -20,26 +28,28 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private productDataStorageService: ProductDataStorageService,
     private productService: ProductsService,
     private router: Router,
-    private activateRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
+  ngAfterContentChecked(): void {
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
-    this.productDataStorageService.fetchProducts();
+    this.productDataStorageService.fetchProducts().subscribe((products) => {
+      this.products = products;
+    });
 
     this.productService.editMode.subscribe((updatedMode) => {
       this.mode = updatedMode;
     });
-
-    this.productsChangedSubscription =
-      this.productService.productsChanged.subscribe((products) => {
-        this.products = products;
-      });
   }
 
   onAddProduct(): void {
     this.mode = 'add-mode';
     this.router.navigate(['create-product/'], {
-      relativeTo: this.activateRoute,
+      relativeTo: this.activatedRoute,
     });
   }
 
@@ -49,15 +59,19 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.productService.selectedProduct.next(product);
 
     this.router.navigate(['edit-product/', product.id], {
-      relativeTo: this.activateRoute,
+      relativeTo: this.activatedRoute,
     });
   }
 
   onDeleteProduct(productID: string, index: number): void {
-    this.productDataStorageService.deleteProduct(productID, index);
+    const selectedProduct = this.products[index];
+
+    this.productDataStorageService.deleteProduct(
+      productID,
+      index,
+      selectedProduct
+    );
   }
 
-  ngOnDestroy(): void {
-    this.productsChangedSubscription.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

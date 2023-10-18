@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admins");
@@ -17,7 +18,12 @@ mongoose
   .catch((err) => console.log("error: ", err));
 
 app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
 app.use(express.json());
+app.use("/productImages", express.static(path.join("backend/productImages")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admins", adminRoutes);

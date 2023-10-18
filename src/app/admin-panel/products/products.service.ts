@@ -10,21 +10,27 @@ export class ProductsService {
   selectedProduct = new ReplaySubject<Product>();
   editMode = new Subject<string>();
 
+  getProducts(): Product[] {
+    return this.products.slice();
+  }
+
+  getProductById(id: string): Product {
+    const product = this.products.filter((product) => product.id === id);
+    return product[0];
+  }
+
   addProduct(product: Product): void {
     this.products.push(product);
-
     this.productsChanged.next(this.products.slice());
   }
 
   setProducts(products: Product[]): void {
     this.products = products;
-
     this.productsChanged.next(this.products.slice());
   }
 
   deleteProduct(index: number): void {
     this.products.splice(index, 1);
-
     this.productsChanged.next(this.products.slice());
   }
 
@@ -34,7 +40,6 @@ export class ProductsService {
     );
 
     this.products[index] = updatedProduct;
-
     this.productsChanged.next(this.products.slice());
   }
 }

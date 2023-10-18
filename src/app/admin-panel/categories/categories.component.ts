@@ -1,15 +1,9 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Category } from './categories.model';
-import { ParentCategory } from './parentCategory.model';
 
 import { CategoriesDataStorageService } from './categories-dataStorage.service';
 import { CategoriesService } from './categories.service';
@@ -28,16 +22,15 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     },
   ];
   categoryObsSubscription: Subscription;
-  mode = {
-    state: 'no-edit',
-    index: null,
-  };
+  mode = 'no-edit';
   categoryForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private categoriesDataStorageService: CategoriesDataStorageService,
-    private categoryService: CategoriesService
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private categoriesService: CategoriesService
   ) {}
 
   ngOnInit(): void {
@@ -54,10 +47,9 @@ export class CategoriesComponent implements OnInit, OnDestroy {
       properties: this.fb.array([]),
     });
 
-    this.categoriesDataStorageService.fetchCategory();
-
-    this.categoryObsSubscription =
-      this.categoryService.categoriesChanged.subscribe((categories) => {
+    this.categoriesDataStorageService
+      .fetchCategories()
+      .subscribe((categories: Category[]) => {
         this.categories = [
           {
             id: null,
@@ -68,6 +60,15 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           ...categories,
         ];
       });
+
+    this.categoryObsSubscription =
+      this.categoriesService.categoriesChanged.subscribe((categories) => {
+        this.categories = categories;
+      });
+
+    this.categoriesService.editMode.subscribe((editMode) => {
+      this.mode = editMode;
+    });
   }
 
   get propertyControls(): FormArray {
@@ -90,67 +91,38 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   onSubmitCategory(): void {
     if (this.categoryForm.invalid) return;
 
-    if (this.mode.state === 'edit') {
-      const modifiedProperties = this.categoryForm
-        .get('properties')
-        .value.map((property: { property: string; value: string }) => {
-          return {
-            property: property.property,
-            values: property.value.split(','),
-          };
-        });
+    const modifiedProperties = this.categoryForm
+      .get('properties')
+      .value.map((property: { property: string; value: string }) => {
+        return {
+          property: property.property,
+          values: property.value.split(','),
+        };
+      });
 
-      const category = new Category(
-        this.categories[this.mode.index].id,
-        this.categories[this.mode.index].categoryName,
+    let category = null;
+
+    if (this.categoryForm.value.parent) {
+      category = new Category(
+        null,
+        this.categoryForm.value.categoryName,
         modifiedProperties,
-        this.categoryForm.value.parent
-      );
-
-      console.log('cat: ', category);
-
-      this.categoriesDataStorageService.updateCategory(
-        this.mode.index,
-        category
+        this.categoryForm.value.parent.id
       );
     } else {
-      const modifiedProperties = this.categoryForm
-        .get('properties')
-        .value.map((property: { property: string; value: string }) => {
-          return {
-            property: property.property,
-            values: property.value.split(','),
-          };
-        });
-
-      let category = null;
-
-      if (this.categoryForm.value.parent) {
-        category = new Category(
-          null,
-          this.categoryForm.value.categoryName,
-          modifiedProperties,
-          this.categoryForm.value.parent.id
-        );
-      } else {
-        category = new Category(
-          null,
-          this.categoryForm.value.categoryName,
-          modifiedProperties
-        );
-      }
-
-      this.categoriesDataStorageService.createCategory(category);
+      category = new Category(
+        null,
+        this.categoryForm.value.categoryName,
+        modifiedProperties
+      );
     }
+
+    this.categoriesDataStorageService.createCategory(category);
+    // }
 
     this.categoryForm.get('parent').setValue('No Parent Category');
     this.categoryForm.get('categoryName').setValue(null);
     (<FormArray>this.categoryForm.get('properties')).clear();
-
-    if (this.mode.state === 'edit') {
-      this.mode.state = 'no-edit';
-      this.mode.index = null;
-    }
   }
 
   onDeleteCategory(index: number): void {
@@ -159,35 +131,18 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.categoriesDataStorageService.deleteCategory(categoryID, index - 1);
   }
 
-  onEditCategory(index: number): void {
-    this.mode.state = 'edit';
-    this.mode.index = index;
-    const selectedCategory = this.categories[index];
+  onEditCategory(category: Category): void {
+    this.mode = 'edit';
 
-    this.categoryForm.controls['categoryName'].setValue(
-      selectedCategory.categoryName
-    );
-    console.log(this.categories);
-    this.categories[0] = selectedCategory.parent;
+    this.categoriesService.selectedCategory.next(category);
 
-    this.categoryForm.controls['parent'].setValue(selectedCategory.parent);
-    if (selectedCategory.properties) {
-      for (let i = 0; i < selectedCategory.properties.length; i++) {
-        (<FormArray>this.categoryForm.get('properties')).push(
-          new FormGroup({
-            property: new FormControl(selectedCategory.properties[i].property),
-            value: new FormControl(
-              selectedCategory.properties[i].values.join(',')
-            ),
-          })
-        );
-      }
-    }
+    this.router.navigate(['edit-category/', category.id], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   onCancelEdit(): void {
-    this.mode.state = 'no-edit';
-    this.mode.index = null;
+    this.mode = 'no-edit';
 
     this.categoryForm.get('parent').setValue({
       id: null,

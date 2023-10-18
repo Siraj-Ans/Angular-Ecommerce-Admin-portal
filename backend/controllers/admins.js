@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../../backend/models/user");
 
 exports.getAdmins = (req, res) => {
   User.find({})

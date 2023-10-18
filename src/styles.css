@@ -3,24 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* width */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 8px;
     margin-left: auto;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
+  } */
+
+/* Track */
+/* ::-webkit-scrollbar-track {
     background: #f1f1f1; 
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
+  } */
+
+/* Handle */
+/* ::-webkit-scrollbar-thumb {
     background: #d1cece; 
   }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
+   */
+/* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover {
     background: #555; 
-  }
+  } */

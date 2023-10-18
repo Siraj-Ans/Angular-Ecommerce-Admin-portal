@@ -1,5 +1,5 @@
-const Category = require("../models/category");
-const Product = require("../models/product");
+const Product = require("../../backend/models/product");
+const fs = require("fs");
 
 exports.fetchProducts = (req, res) => {
   Product.find()
@@ -26,19 +26,22 @@ exports.fetchProduct = (req, res) => {
     .then((document) => {
       product = document;
 
-      return ParentCategory.findOne({ _id: document.productCategory });
-    })
-    .then((document) => {
-      category = document;
-
       res.status(200).json({
         message: "successfully fetched the product!",
-        result: {
-          product: product,
-          category: category,
-        },
+        product: document,
       });
     })
+    // .then((document) => {
+    //   category = document;
+
+    //   res.status(200).json({
+    //     message: "successfully fetched the product!",
+    //     result: {
+    //       product: product,
+    //       category: category,
+    //     },
+    //   });
+    // })
     .catch(() => {
       res.status(500).json({
         message: "Server failed fetching the product",
@@ -47,10 +50,22 @@ exports.fetchProduct = (req, res) => {
 };
 
 exports.createProduct = (req, res) => {
+  let productImages = [];
+  const url = req.protocol + "://" + req.get("host");
+
+  if (req.files.length > 0) {
+    for (let i = 0; i < req.files.length; i++) {
+      const imageUrl = url + "/backend/productImages/" + req.files[i].filename;
+      productImages.push(imageUrl);
+    }
+  }
+
+  console.log("productImages: ", productImages);
+
   const product = new Product({
     productName: req.body.productName,
     productCategory: req.body.productCategory,
-    productImages: req.files,
+    productImages: productImages,
     description: req.body.description,
     priceInUSD: +req.body.priceInUSD,
   });
@@ -108,6 +123,24 @@ exports.updateProduct = (req, res) => {
 
 exports.deleteProduct = (req, res) => {
   const productID = req.params.id;
+  const product = JSON.parse(req.query.product);
+
+  for (let i = 0; i < product.productImages.length; i++) {
+    let path = product.productImages[i].split("/");
+    path.splice(0, 3);
+    path.unshift(
+      "/Web Development/Angular-Ecommerce-App/Ecommerce-admin-portal/backend"
+    );
+    path = path.join("/");
+
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error("There was an error deleting the file:", err);
+      } else {
+        console.log("File deleted successfully");
+      }
+    });
+  }
 
   Product.deleteOne({ _id: productID })
     .then((result) => {

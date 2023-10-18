@@ -3,11 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  SocialLoginModule,
-  SocialAuthServiceConfig,
-} from '@abacritt/angularx-social-login';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import {
   LucideAngularModule,
   Home,
   Store,
@@ -18,6 +13,8 @@ import {
   Settings,
   LogOut,
   ArrowUpFromLine,
+  Trash2,
+  Menu,
 } from 'lucide-angular';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +29,10 @@ import { AdminsComponent } from './admin-panel/admins/admins.component';
 import { SettingsComponent } from './admin-panel/settings/settings.component';
 import { AuthComponent } from './auth/auth.component';
 import { EditProductComponent } from './admin-panel/products/edit-product/edit-product.component';
+import { CategoryEditComponent } from './admin-panel/categories/category-edit/category-edit.component';
+
+import { ProductResolverService } from './admin-panel/products/products-resolver.service';
+import { CategoriesResolverService } from './admin-panel/categories/categories-resolver';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { EditProductComponent } from './admin-panel/products/edit-product/edit-p
     ProductsComponent,
     EditProductComponent,
     CategoriesComponent,
+    CategoryEditComponent,
     OrdersComponent,
     AdminsComponent,
     SettingsComponent,
@@ -51,7 +53,6 @@ import { EditProductComponent } from './admin-panel/products/edit-product/edit-p
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocialLoginModule,
     AppRoutingModule,
     LucideAngularModule.pick({
       Home,
@@ -63,27 +64,11 @@ import { EditProductComponent } from './admin-panel/products/edit-product/edit-p
       Settings,
       LogOut,
       ArrowUpFromLine,
+      Trash2,
+      Menu,
     }),
   ],
-  providers: [
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '371408936031-nqmnudk1nmaut008iup7e0f9out948ok.apps.googleusercontent.com'
-            ),
-          },
-        ],
-        onError: (err) => {
-          console.error('err: ', err);
-        },
-      } as SocialAuthServiceConfig,
-    },
-  ],
+  providers: [[ProductResolverService, CategoriesResolverService]],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
