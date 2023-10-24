@@ -1,4 +1,10 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import {
+  Component,
+  NgZone,
+  OnInit,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
 import jwt_decode from 'jwt-decode';
@@ -13,6 +19,7 @@ import { DecodedCredentials } from './decoded-credentials.model';
 })
 export class AuthComponent implements OnInit {
   authError: string;
+  @ViewChild('gbutton') gbutton: ElementRef = new ElementRef({});
 
   constructor(
     private router: Router,
@@ -35,7 +42,7 @@ export class AuthComponent implements OnInit {
       // @ts-ignore
       google.accounts.id.renderButton(
         // @ts-ignore
-        document.getElementById('googleButton'),
+        this.gbutton.nativeElement,
         {
           theme: 'outline',
           size: 'large',
@@ -51,23 +58,30 @@ export class AuthComponent implements OnInit {
   }
 
   async handleCredentialsResponse(response: CredentialResponse) {
-    try {
-      const decodedToken: DecodedCredentials = jwt_decode(response.credential);
-      this.authService.login(decodedToken.email).subscribe({
-        next: (responseData) => {
-          console.log(responseData);
-          this.authService.setUser(decodedToken, response.credential);
-          this._ngZone.run(() => {
-            this.router.navigate(['']);
-          });
-          this.authService.isAuthenticated = true;
-        },
-        error: (err) => {
-          this.authError = err.error.message;
-        },
-      });
-    } catch (err) {
-      return err;
+    if(response.select_by === "user") {
+      try {
+        const decodedToken: DecodedCredentials = jwt_decode(response.credential);
+        this.authService.login(decodedToken).subscribe({
+          next: () => {
+            this.authService.authenticationUpdated.next(true);
+  
+            this.authService.setUser(decodedToken, response.credential);
+            this._ngZone.run(() => {
+              this.router.navigate(['']);
+            });
+            this.authService.isAuthenticated = true;
+          },
+          error: (err) => {
+            this.authError = err.error.message;
+          },
+        });
+      } catch (err) {
+        return err;
+      }
+    } else {
+      const decodedcredentials: DecodedCredentials = jwt_decode(response.credential);
+      this.authService.signUp(decodedcredentials);
     }
+    
   }
 }

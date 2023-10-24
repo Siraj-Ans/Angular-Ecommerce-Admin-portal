@@ -1,63 +1,76 @@
-<div class="flex font-medium text-cream h-full gap-8 pr-6">
-  <div class="flex w-fit flex-col pl-3 gap-6">
-    <div class="pl-3">
-      <div class="flex w-1/4 items-center">
-        <lucide-icon class="-mt-2 mr-1" name="store"></lucide-icon>
-        <h1 class="font-medium mt-3 text-2xl mb-8">EcommerceAdmin</h1>
-      </div>
+<div class="flex font-medium text-cream">
+  <div class="flex pb-3 flex-col pl-3 gap-6">
+    <div>
+      <a routerLink="dashboard" class="flex w-1/4 items-center">
+        <lucide-icon class="-mt-2.5 mr-1" name="store"></lucide-icon>
+        <h1 class="font-medium mt-3 text-2xl mb-4 cursor-pointer md:mb-8">
+          EcommerceAdmin
+        </h1>
+      </a>
     </div>
     <a
+      NavLinksDirective
       routerLink="dashboard"
       routerLinkActive="active-link"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="flex rounded-md py-2 pl-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer md:text-xl"
     >
-      <lucide-icon name="home"></lucide-icon>
-      <p class="-mt-1">Dashboard</p>
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="home"></lucide-icon>
+      <p>Dashboard</p>
     </a>
     <a
+      NavLinksDirective
       routerLink="products"
       routerLinkActive="active-link"
-      class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
     >
-      <lucide-icon name="shopping-cart"></lucide-icon>
-      <p class="-mt-1">Products</p>
+      <lucide-icon
+        class="w-5 h-5 md:w-8 md:h-8"
+        name="shopping-cart"
+      ></lucide-icon>
+      <p>Products</p>
     </a>
     <a
+      NavLinksDirective
       routerLink="categories"
       routerLinkActive="active-link"
-      class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
     >
-      <lucide-icon name="list"></lucide-icon>
-      <p class="-mt-1">Categories</p>
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="list"></lucide-icon>
+      <p>Categories</p>
     </a>
     <a
+      NavLinksDirective
       routerLink="orders"
       routerLinkActive="active-link"
-      class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
     >
-      <lucide-icon name="layers"></lucide-icon>
-      <p class="-mt-1 pl-2">Orders</p>
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="layers"></lucide-icon>
+      <p>Orders</p>
     </a>
     <a
+      NavLinksDirective
       routerLink="admins"
       routerLinkActive="active-link"
-      class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
     >
-      <lucide-icon name="users"></lucide-icon>
-      <p class="-mt-1">Admins</p>
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="users"></lucide-icon>
+      <p>Admins</p>
     </a>
     <a
+      NavLinksDirective
       routerLink="settings"
       routerLinkActive="active-link"
-      class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer"
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
     >
-      <lucide-icon name="settings"></lucide-icon>
-      <p class="-mt-1">Settings</p>
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="settings"></lucide-icon>
+      <p>Settings</p>
     </a>
-    <div class="flex rounded-md pl-2 py-2 gap-2 text-xl cursor-pointer">
-      <lucide-icon name="log-out"></lucide-icon>
-      <button (click)="onLogout()" class="-mt-1">Logout</button>
+    <div
+      class="flex rounded-md py-2 pl-2 gap-2 text-base cursor-pointer hover:bg-gray-300 hover:text-light-purple md:text-xl"
+    >
+      <lucide-icon class="w-5 h-5 md:w-8 md:h-8" name="log-out"></lucide-icon>
+      <button (click)="onLogout()">Logout</button>
     </div>
   </div>
 </div>

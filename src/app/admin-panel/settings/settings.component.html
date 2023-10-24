@@ -1,17 +1,39 @@
-<div class="flex pt-16 flex-col gap-8">
-    <h1 class="text-3xl mb-5 font-medium text-gray-600">Settings</h1>
+<div
+  class="flex bg-light h-full w-screen md:w-full md:rounded-md md:px-5 flex-col pt-14 px-2 overflow-scroll overflow-x-hidden overflow-y-auto md:pt-7"
+>
+  <h1 class="text-2xl mb-5 font-semibold text-dark-purple md:text-3xl">
+    Settings
+  </h1>
 
-    <form class="flex flex-col gap-4">
-        <div class="flex gap-1 flex-col">
-            <label class="font-medium text-gray-500" for="">Featured product</label>
-            <input class="px-3 py-2 border-2 border-gray-300" type="text">
-        </div>
-        <div class="flex gap-1 flex-col">
-            <label class="font-medium text-gray-500" for="">Shipping Price (in USD)</label>
-            <input class="px-3 py-2 border-2 border-gray-300" type="text">
-        </div>
-        <button class="font-medium w-32 bg-green-500 px-3 py-2 rounded-md">Save Settings</button>
-
-    </form>
-
+  <form class="flex flex-col gap-4">
+    <div class="flex gap-1 flex-col">
+      <label
+        class="font-medium text-light-purple text-sm md:text-base"
+        for="featuredProduct"
+        >Featured product</label
+      >
+      <input
+        id="featuredProduct"
+        class="px-3 py-2 border-2 border-gray-300"
+        type="text"
+      />
+    </div>
+    <div class="flex gap-1 flex-col">
+      <label
+        class="font-medium text-light-purple text-sm md:text-base"
+        for="shippingPrice"
+        >Shipping Price (in USD)</label
+      >
+      <input
+        id="shippingPrice"
+        class="px-3 py-2 border-2 border-gray-300"
+        type="text"
+      />
+    </div>
+    <button
+      class="font-medium text-white text-sm w-fit bg-green-500 px-3 py-2 rounded-md md:text-base"
+    >
+      Save Settings
+    </button>
+  </form>
 </div>

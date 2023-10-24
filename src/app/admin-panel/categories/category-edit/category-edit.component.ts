@@ -108,6 +108,6 @@ export class CategoryEditComponent implements OnInit {
 
   onCancelEdit(): void {
     this.categoriesService.editMode.next('no-edit');
-    this.router.navigate(['adminpanel/categories']);
+    this.router.navigate(['categories']);
   }
 }

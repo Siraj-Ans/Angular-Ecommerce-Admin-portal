@@ -1,21 +1,20 @@
-<div class="h-full flex relative w-full bg-dark-purple">
-  <div href="adminPanel">
-    <div class="mt-2 ml-2">
-      <button id="hamburger-menu" class="md:hidden flex" (click)="onDropdown()">
+<div class="flex md:bg-dark-purple relative w-full md:w-screen md:h-screen">
+  <div *ngIf="isAuthenticated">
+    <div (click)="onDropdown()" class="fixed top:0 mt-2 ml-2">
+      <button id="hamburger-menu" class="md:hidden flex">
         <lucide-icon name="menu"></lucide-icon>
       </button>
     </div>
-    <div id="adminPanel" class="md:flex hidden">
-      <app-admin-panel class="w-full"></app-admin-panel>
+    <div
+      (click)="onCloseDropDown()"
+      [@adminpanelMenu]="state"
+      class="absolute w-0 h-0 md:w-full md:h-full bg-dark-purple overflow-hidden md:static md:flex md:px-3"
+    >
+      <app-admin-panel></app-admin-panel>
     </div>
   </div>
 
-  <div class="hidden">
-    <!-- <div id="adminPanel" class="hidden md:flex"> -->
-
-    <!-- <div class="w-full my-3 rounded-lg pr-2 py-2 bg-white"> -->
+  <div class="w-screen h-screen md:w-full">
     <router-outlet></router-outlet>
-    <!-- </div> -->
-    <!-- </div> -->
   </div>
 </div>

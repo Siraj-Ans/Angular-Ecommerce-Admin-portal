@@ -1,7 +1,9 @@
 <div
-  class="flex flex-col gap-4 pt-5 font-bold px-5 text-dark-purple pb-8 h-full overflow-scroll overflow-x-hidden overflow-y-auto"
+  class="flex bg-light h-full w-full md:w-full flex-col pt-14 px-3 overflow-scroll overflow-x-hidden overflow-y-auto md:rounded-md md:px-5 md:pt-7"
 >
-  <h1 class="text-3xl mb-5 font-semibold">Categories</h1>
+  <h1 class="text-2xl text-dark-purple mb-5 font-semibold md:text-3xl">
+    Categories
+  </h1>
 
   <form
     *ngIf="mode === 'no-edit'"
@@ -11,7 +13,7 @@
   >
     <div class="flex flex-col gap-5">
       <div class="flex flex-col gap-1">
-        <label class="font-medium" for="categoryName"
+        <label class="font-medium text-sm md:text-base" for="categoryName"
           >Create new category</label
         >
         <div class="flex gap-3">
@@ -20,7 +22,7 @@
               id="categoryName"
               formControlName="categoryName"
               placeholder="Category name"
-              class="px-2 rounded-sm font-medium py-1 border-2 border-gray-300"
+              class="px-2 rounded-sm w-36 text-sm font-medium py-1 border-2 border-gray-300 md:text-base md:w-56"
               type="text"
             />
           </div>
@@ -28,7 +30,7 @@
             <select
               [(ngModel)]="categories[0]"
               formControlName="parent"
-              class="max-w-fit text-light-purple font-medium px-2 py-1 border-2 border-gray-300 rounded-sm"
+              class="max-w-fit w-48 text-sm text-light-purple font-medium px-2 py-1 border-2 border-gray-300 rounded-sm md:text-base md:w-56"
               required
             >
               <option
@@ -45,11 +47,11 @@
       </div>
 
       <div class="flex gap-1 flex-col">
-        <label class="font-medium" for="">Properties</label>
+        <label class="font-medium text-sm md:text-base">Properties</label>
         <button
           type="button"
           (click)="onAddProperty()"
-          class="px-3 py-2 text-white border-gray-300 w-44 bg-light-purple hover:bg-dark-purple font-medium rounded-md"
+          class="px-3 py-2 text-white text-sm border-gray-300 w-fit bg-light-purple hover:bg-dark-purple font-medium rounded-md md:text-base"
         >
           Add new property
         </button>
@@ -105,31 +107,37 @@
           </div>
         </div>
       </div>
-      <button
-        (click)="onCancelEdit()"
-        type="submit"
-        class="text-white font-medium rounded-md px-3 py-2 bg-red-600 w-24"
-      >
-        cancel
-      </button>
-      <button
-        [disabled]="categoryForm.disabled"
-        type="submit"
-        class="font-medium w-fit text-white bg-green-500 px-3 py-2 rounded-md"
-      >
-        Save
-      </button>
+      <div class="flex gap-3">
+        <button
+          (click)="onCancelEdit()"
+          type="submit"
+          class="text-sm font-medium mb-4 w-fit text-white bg-red-600 px-3 py-2 rounded-md md:text-md"
+        >
+          cancel
+        </button>
+        <button
+          [disabled]="categoryForm.disabled"
+          type="submit"
+          class="font-medium bg-gradient-to-r bg-green-500 text-sm hover:from-gray-500 hover:to-green-900 mb-4 w-fit text-white px-3 py-2 rounded-md md:text-base"
+        >
+          Save
+        </button>
+      </div>
     </div>
   </form>
 
   <div class="shadow-lg" *ngIf="mode === 'no-edit'">
     <div class="flex flex-col">
       <div class="flex">
-        <div class="px-2 w-1/2 py-2 bg-blue-300">
-          <p class="text-lg font-semibold">CATEGORY NAME</p>
+        <div class="px-2 w-7/12 py-2 bg-blue-300 md:w-1/2">
+          <p class="text-sm text-dark-purple font-semibold md:text-lg">
+            CATEGORY NAME
+          </p>
         </div>
         <div class="px-2 w-full py-2 pl-4 bg-blue-300">
-          <p class="text-lg font-semibold">PARENT CATEGORY</p>
+          <p class="text-sm text-dark-purple pl-5 font-semibold md:text-lg">
+            PARENT CATEGORY
+          </p>
         </div>
       </div>
 
@@ -138,8 +146,10 @@
           *ngIf="i !== 0"
           class="flex px-3 border-b-2 py-2 items-center justify-between"
         >
-          <p class="font-medium">{{ category.categoryName }}</p>
-          <p class="font-medium">
+          <p class="font-medium text-sm text-light-purple md:text-base">
+            {{ category.categoryName }}
+          </p>
+          <p class="font-medium text-sm text-light-purple md:text-base">
             {{
               category?.parent
                 ? category.parent.categoryName
@@ -148,29 +158,24 @@
           </p>
 
           <div class="flex gap-3">
-            <button
-              (click)="onEditCategory(category)"
-              class="px-2 py-1 border-2 w-20 font-medium rounded-md"
-            >
-              Edit
-            </button>
+            <div class="flex items-center">
+              <lucide-icon
+                (click)="onEditCategory(category)"
+                class="mr-2 cursor-pointer"
+                name="file-edit"
+              ></lucide-icon>
+            </div>
             <div
               (click)="onDeleteCategory(i)"
               class="flex items-center cursor-pointer text-red-900"
             >
               <lucide-icon name="trash-2"></lucide-icon>
             </div>
-            <!-- <button
-              (click)="onDeleteCategory(i)"
-              class="px-2 py-1 w-20 bg-red-600 bg-gradient-to-r hover:from-red-600 hover:to-red-500 text-white font-medium rounded-md"
-            >
-              Delete
-            </button> -->
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="mode === 'edit'"></router-outlet>
 </div>

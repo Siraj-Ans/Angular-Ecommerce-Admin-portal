@@ -21,12 +21,17 @@ const appRoutes: Routes = [
   {
     path: 'adminpanel',
     component: AdminPanelComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
   },
-  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'products',
     component: ProductsComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'create-product',
@@ -45,11 +50,12 @@ const appRoutes: Routes = [
   {
     path: 'categories',
     component: CategoriesComponent,
+    canActivate: [authGuard],
     children: [{ path: 'edit-category/:id', component: CategoryEditComponent }],
   },
-  { path: 'orders', component: OrdersComponent },
-  { path: 'admins', component: AdminsComponent },
-  { path: 'settings', component: SettingsComponent },
+  { path: 'orders', canActivate: [authGuard], component: OrdersComponent },
+  { path: 'admins', canActivate: [authGuard], component: AdminsComponent },
+  { path: 'settings', canActivate: [authGuard], component: SettingsComponent },
   { path: 'auth', component: AuthComponent },
 ];
 

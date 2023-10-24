@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   LucideAngularModule,
   Home,
@@ -15,6 +16,7 @@ import {
   ArrowUpFromLine,
   Trash2,
   Menu,
+  FileEdit,
 } from 'lucide-angular';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -31,6 +33,7 @@ import { AuthComponent } from './auth/auth.component';
 import { EditProductComponent } from './admin-panel/products/edit-product/edit-product.component';
 import { CategoryEditComponent } from './admin-panel/categories/category-edit/category-edit.component';
 
+import { AuthInterceptor } from './auth/auth-interceptor';
 import { ProductResolverService } from './admin-panel/products/products-resolver.service';
 import { CategoriesResolverService } from './admin-panel/categories/categories-resolver';
 
@@ -50,6 +53,7 @@ import { CategoriesResolverService } from './admin-panel/categories/categories-r
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -66,9 +70,13 @@ import { CategoriesResolverService } from './admin-panel/categories/categories-r
       ArrowUpFromLine,
       Trash2,
       Menu,
+      FileEdit,
     }),
   ],
-  providers: [[ProductResolverService, CategoriesResolverService]],
+  providers: [
+    [ProductResolverService, CategoriesResolverService],
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,32 +1,35 @@
 <div
-  class="flex flex-col h-full text-dark-purple gap-4 pt-7 px-5 pb-4 max-h-full"
+  class="flex bg-light h-full w-full md:w-full flex-col pt-14 px-3 overflow-scroll overflow-x-hidden overflow-y-auto md:rounded-md md:px-5 md:pt-7"
 >
   <button
     *ngIf="mode !== 'add-mode'"
     routerLink="edit-product"
     (click)="onAddProduct()"
-    class="font-medium w-fit bg-gradient-to-r bg-green-500 hover:from-gray-500 hover:to-green-900 text-white px-3 py-2 rounded-md"
+    class="font-medium w-fit bg-gradient-to-r bg-green-500 text-sm hover:from-gray-500 hover:to-green-900 text-white px-3 py-2 rounded-md mb-3 md:text-base"
   >
     Add new product
   </button>
 
   <div
     *ngIf="mode === 'no-edit'"
-    class="flex flex-col rounded-sm gap-2 text-lg w-11/12 shadow-lg"
+    class="flex flex-col rounded-sm gap-2 text-lg w-11/12 shadow-lg md:w-9/12"
   >
-    <div class="border-b-2 bg-blue-300 px-2 py-2">
+    <div class="text-base border-b-2 bg-blue-300 px-2 py-2 md:text-lg">
       <h1 class="font-medium">Product Name</h1>
     </div>
     <div *ngFor="let product of products; let i = index" class="">
       <div class="flex px-2 py-2 justify-between">
-        <p class="font-medium">{{ product.productName }}</p>
-        <div class="flex gap-3">
-          <button
-            (click)="onEditProduct(product)"
-            class="px-2 py-1 border-2 w-20 font-medium rounded-md"
-          >
-            Edit
-          </button>
+        <p class="text-base font-medium md:text-lg">
+          {{ product.productName }}
+        </p>
+        <div class="flex gap-3 items-center">
+          <div class="flex items-center">
+            <lucide-icon
+              (click)="onEditProduct(product)"
+              class="mr-2 cursor-pointer"
+              name="file-edit"
+            ></lucide-icon>
+          </div>
           <div class="flex items-center">
             <lucide-icon
               class="cursor-pointer text-red-700"

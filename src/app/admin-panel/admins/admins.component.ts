@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 
 import { environment } from 'src/environments/environment';
 
-const BACKEND_URL = environment.apiUTL;
+const BACKEND_URL = environment.apiUTL + 'admins/';
 
 import { Admin } from './admin.model';
 
@@ -34,7 +34,7 @@ export class AdminsComponent implements OnInit {
           _id: string;
           __v: number;
         }[];
-      }>(BACKEND_URL + 'admins/get-admins')
+      }>(BACKEND_URL + 'get-admins')
       .subscribe({
         next: (responseData) => {
           this.admins = responseData.admins.map((responseData) => {
@@ -61,7 +61,7 @@ export class AdminsComponent implements OnInit {
 
     this.http
       .post<{ message: string; status: string }>(
-        BACKEND_URL + 'auth/create-admin',
+        BACKEND_URL + 'create-admin',
         {
           email: admin.email,
           dateAndTime: admin.dateAndTime,
@@ -77,7 +77,7 @@ export class AdminsComponent implements OnInit {
                 _id: string;
                 __v: number;
               }[];
-            }>(BACKEND_URL + 'admins/get-admins')
+            }>(BACKEND_URL + 'get-admins')
             .subscribe({
               next: (responseData) => {
                 this.admins = responseData.admins.map((responseData) => {
@@ -86,6 +86,8 @@ export class AdminsComponent implements OnInit {
                     dateAndTime: responseData.dateAndTime,
                   };
                 });
+              
+                adminForm.reset()
               },
             });
 
@@ -101,7 +103,7 @@ export class AdminsComponent implements OnInit {
 
   onDeleteAdmin(email: string): void {
     this.http
-      .delete<{ message: string }>(BACKEND_URL + 'admins/delete-admin', {
+      .delete<{ message: string }>(BACKEND_URL + 'delete-admin', {
         params: new HttpParams().set('email', email),
       })
       .subscribe({
@@ -114,7 +116,7 @@ export class AdminsComponent implements OnInit {
                 _id: string;
                 __v: number;
               }[];
-            }>(BACKEND_URL + 'admins/get-admins')
+            }>(BACKEND_URL + 'get-admins')
             .subscribe({
               next: (responseData) => {
                 this.admins = responseData.admins.map((responseData) => {
@@ -122,6 +124,7 @@ export class AdminsComponent implements OnInit {
                     email: responseData.email,
                     dateAndTime: responseData.dateAndTime,
                   };
+                  
                 });
               },
             });
