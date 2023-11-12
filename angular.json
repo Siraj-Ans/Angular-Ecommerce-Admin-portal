@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ecommerce-admin-porta",
+            "outputPath": "backend/ecommerce-admin-portal",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [

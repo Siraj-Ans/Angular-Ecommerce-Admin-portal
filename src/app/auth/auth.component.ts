@@ -58,8 +58,11 @@ export class AuthComponent implements OnInit {
   }
 
   async handleCredentialsResponse(response: CredentialResponse) {
-    if(response.select_by === "user") {
+    console.log('response: ', response)
+    
+    if(response.select_by === "btn") {
       try {
+        console.log('trig1');
         const decodedToken: DecodedCredentials = jwt_decode(response.credential);
         this.authService.login(decodedToken).subscribe({
           next: () => {
@@ -67,6 +70,7 @@ export class AuthComponent implements OnInit {
   
             this.authService.setUser(decodedToken, response.credential);
             this._ngZone.run(() => {
+              console.log(this.authService.getIsAuth());
               this.router.navigate(['']);
             });
             this.authService.isAuthenticated = true;
@@ -79,6 +83,7 @@ export class AuthComponent implements OnInit {
         return err;
       }
     } else {
+      console.log('trig2')
       const decodedcredentials: DecodedCredentials = jwt_decode(response.credential);
       this.authService.signUp(decodedcredentials);
     }

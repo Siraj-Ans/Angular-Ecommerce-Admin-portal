@@ -2,6 +2,7 @@ const Admin = require("../models/admin");
 const User = require("../models/user");
 
 exports.login = (req, res) => {
+  console.log('trig') 
   User.findOne({ email: req.query.email, sub: req.query.sub })
   .then((result) => {
     if(!result) {

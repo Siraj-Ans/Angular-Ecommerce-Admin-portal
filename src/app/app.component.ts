@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
   }
 
   onDropdown(): void {
-    console.log('trig');
     this.state = 'open';
     console.log(this.state);
   }

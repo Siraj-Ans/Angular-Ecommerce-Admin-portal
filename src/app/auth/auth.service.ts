@@ -76,7 +76,7 @@ export class AuthService implements OnInit {
 
   login(decodedCredentials: DecodedCredentials): Observable<any> {
     let params = new HttpParams().set('email', decodedCredentials.email);
-    params = params.append('sub', decodedCredentials.sub)
+    params = params.append('sub', decodedCredentials.sub);
 
     return this.http.get(BACKEND_URL + 'login', {
       params: params
